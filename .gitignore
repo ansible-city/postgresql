@@ -1,0 +1,15 @@
+##
+# IDEs, editors
+.buildpath
+.project
+.settings/
+*.swp
+
+
+
+
+##
+# Build, ...
+/tests/vagrant/.vagrant
+/tests/ansible-city.*
+*.bak

@@ -1,0 +1,17 @@
+---
+
+postgresql:
+  data_directory: "/var/lib/postgresql/9.5/main"
+  locale: "en_GB.UTF-8"
+  max_connections: 100
+  port: 5432
+  root_password: password
+  root_user: root
+  shared_buffers: 128MB
+  ssl: true
+  timezone: "UTC"
+  version: 9.5
+
+  service:
+    state: started
+    enabled: yes
