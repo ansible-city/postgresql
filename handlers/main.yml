@@ -1,0 +1,25 @@
+---
+
+- name: start postgres
+  become: yes
+  service:
+    name: postgresql
+    state: started
+
+- name: reload postgres
+  become: yes
+  service:
+    name: postgresql
+    state: reloaded
+
+- name: restart postgres
+  become: yes
+  service:
+    name: postgresql
+    state: restarted
+
+- name: stop postgres
+  become: yes
+  service:
+    name: postgresql
+    state: stopped

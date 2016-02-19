@@ -1,0 +1,35 @@
+##
+# {{ ansible_managed }}
+
+data_directory = '{{ postgresql.data_directory }}'
+hba_file = '/etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf'
+ident_file = '/etc/postgresql/{{ postgresql.version }}/main/pg_ident.conf'
+
+external_pid_file = '/var/run/postgresql/{{ postgresql.version }}-main.pid'
+
+port = {{ postgresql.port }}
+
+max_connections = {{ postgresql.max_connections }}
+
+unix_socket_directories = '/var/run/postgresql'
+
+ssl = {{ postgresql.ssl }}
+{% if postgresql.ssl == true %}
+ssl_cert_file = '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+ssl_key_file = '/etc/ssl/private/ssl-cert-snakeoil.key'
+{% endif %}
+
+shared_buffers = {{ postgresql.shared_buffers }}
+
+log_line_prefix = '%t '
+log_timezone = 'UTC'
+
+datestyle = 'iso, dmy'
+timezone = '{{ postgresql.timezone }}'
+
+lc_messages = '{{ postgresql.locale }}'     # locale for system error message
+lc_monetary = '{{ postgresql.locale }}'     # locale for monetary formatting
+lc_numeric = '{{ postgresql.locale }}'      # locale for number formatting
+lc_time = '{{ postgresql.locale }}'         # locale for time formatting
+
+default_text_search_config = 'pg_catalog.english'

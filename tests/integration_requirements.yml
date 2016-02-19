@@ -1,0 +1,4 @@
+---
+
+- name: ansible-city.postgresql
+  version: v1.0

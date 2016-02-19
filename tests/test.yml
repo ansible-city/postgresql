@@ -1,0 +1,65 @@
+---
+
+- name: Postgresql should be installed
+  hosts: all
+
+  pre_tasks:
+    - name: Update apt
+      become: yes
+      apt:
+        cache_valid_time: 1800
+        update_cache: yes
+      tags:
+        - build
+
+  roles:
+    - role: ansible-city.postgresql
+
+  post_tasks:
+    - name: Postgresql should be installed
+      command: psql --version
+      register: postgresql_version
+      tags:
+        - assert
+
+    - name: Assert Postgresql version
+      assert:
+        that:
+          - postgresql_version.stdout == 'psql (PostgreSQL) 9.5.1'
+      tags:
+        - assert
+
+    - name: Postgresql should have a root user
+      become: yes
+      become_user: postgres
+      shell: echo "SELECT * FROM pg_user WHERE usename='{{ postgresql.root_user }}';" | psql -x
+      register: postgresql_root
+      tags:
+        - assert
+
+    - name: Assert Postgresql root user exists
+      assert:
+        that:
+          - "'RECORD 1' in postgresql_root.stdout"
+      tags:
+        - assert
+
+    - name: Get Postgresql root role attributes
+      become: yes
+      become_user: postgres
+      shell: echo "SELECT 'super:'||rolsuper, 'createrole:'||rolcreaterole, 'create:'||rolcreatedb, 'inherit:'||rolinherit, 'login:'||rolcanlogin FROM pg_roles WHERE rolname='{{ postgresql.root_user }}';" | psql -x
+      register: result_rootperms
+      tags:
+        - assert
+
+    - name: Assert Postgresql root has correct role attributes
+      assert:
+        that:
+          - "'RECORD 1' in result_rootperms.stdout"
+          - "'super:true' in result_rootperms.stdout"
+          - "'createrole:true' in result_rootperms.stdout"
+          - "'create:true' in result_rootperms.stdout"
+          - "'inherit:true' in result_rootperms.stdout"
+          - "'login:true' in result_rootperms.stdout"
+      tags:
+        - assert

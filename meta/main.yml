@@ -1,0 +1,19 @@
+---
+
+allow_duplicates: yes
+dependencies: [ ]
+
+galaxy_info:
+  author: Wojtek Oledzki
+  company: Voytek Solutions LTD
+  description: Install Postgresql server
+  license: MIT
+  min_ansible_version: 1.9
+  
+  categories:
+    - development
+  platforms:
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty

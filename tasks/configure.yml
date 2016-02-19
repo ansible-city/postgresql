@@ -1,0 +1,37 @@
+---
+
+- name: Make sure the requested locale exists on the server
+  become: yes
+  locale_gen:
+    name: "{{ postgresql.locale }}"
+    state: present
+
+- name: Copy configuration templates
+  become: yes
+  template:
+    src: postgresql.conf.j2
+    dest: "/etc/postgresql/{{ postgresql.version }}/main/postgresql.conf"
+  notify: reload postgres
+
+- name: Copy pg_hba.conf
+  become: yes
+  template:
+    src: pg_hba.conf.j2
+    dest: "/etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf"
+  notify: restart postgres
+
+- name: Ensure DB user
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: "{{ postgresql.root_user }}"
+    password: "{{ postgresql.root_password }}"
+    role_attr_flags: "SUPERUSER,CREATEROLE,CREATEDB,INHERIT,login"
+    state: present
+
+- name: Ensure postgresql is running
+  become: yes
+  service:
+    enabled: "{{ postgresql.service.enabled }}"
+    name: postgresql
+    state: "{{ postgresql.service.state }}"
